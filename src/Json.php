@@ -8,16 +8,16 @@ namespace Yiisoft\Json {
     final class Json
     {
         private const ERRORS = [
-            'JSON_ERROR_DEPTH' => 'The maximum stack depth has been exceeded',
-            'JSON_ERROR_STATE_MISMATCH' => 'Invalid or malformed JSON',
+            'JSON_ERROR_DEPTH' => 'Maximum stack depth exceeded',
+            'JSON_ERROR_STATE_MISMATCH' => 'State mismatch (invalid or malformed JSON)',
             'JSON_ERROR_CTRL_CHAR' => 'Control character error, possibly incorrectly encoded',
             'JSON_ERROR_SYNTAX' => 'Syntax error',
             'JSON_ERROR_UTF8' => 'Malformed UTF-8 characters, possibly incorrectly encoded',
-            'JSON_ERROR_RECURSION' => 'One or more recursive references in the value to be encoded',
-            'JSON_ERROR_INF_OR_NAN' => 'One or more NAN or INF values in the value to be encoded',
-            'JSON_ERROR_UNSUPPORTED_TYPE' => 'A value of a type that cannot be encoded was given',
-            'JSON_ERROR_INVALID_PROPERTY_NAME' => 'A key starting with \u0000 character was in the string when decoding a JSON object into a PHP object',
-            'JSON_ERROR_UTF16' => 'Single unpaired UTF-16 surrogate in unicode escape contained in the JSON string to be encoded',
+            'JSON_ERROR_RECURSION' => 'Recursion detected',
+            'JSON_ERROR_INF_OR_NAN' => 'Inf and NaN cannot be JSON encoded',
+            'JSON_ERROR_UNSUPPORTED_TYPE' => 'Type is not supported',
+            'JSON_ERROR_INVALID_PROPERTY_NAME' => 'The decoded property name is invalid',
+            'JSON_ERROR_UTF16' => 'Single unpaired UTF-16 surrogate in unicode escape',
         ];
 
         /**
