@@ -6,7 +6,7 @@ use Yiisoft\Json\Json;
 
 class JsonTest extends TestCase
 {
-   public function testEncodeBasic(): void
+    public function testEncodeBasic(): void
     {
         $data = '1';
         $this->assertSame('"1"', Json::encode($data));
