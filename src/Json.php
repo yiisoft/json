@@ -156,6 +156,10 @@ final class Json
                 return self::processData($data->jsonSerialize());
             }
 
+            if ($data instanceof \DateTimeInterface) {
+                return static::processData((array)$data);
+            }
+
             if ($data instanceof \SimpleXMLElement) {
                 $data = (array)$data;
             } else {

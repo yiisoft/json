@@ -188,4 +188,14 @@ class JsonTest extends TestCase
             $this->assertSame($errors['JSON_ERROR_UNSUPPORTED_TYPE'], $e->getMessage());
         }
     }
+
+    /**
+     * @link https://github.com/yiisoft/yii2/issues/17760
+     */
+    public function testEncodeDateTime()
+    {
+        $input = new \DateTime('October 12, 2014');
+        $output = Json::encode($input);
+        $this->assertEquals('{"date":"2014-10-12 00:00:00.000000","timezone_type":3,"timezone":"UTC"}', $output);
+    }
 }
