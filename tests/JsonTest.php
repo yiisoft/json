@@ -167,15 +167,12 @@ class JsonTest extends TestCase
 
     public function testHandleJsonError(): void
     {
-        $jsonClass = new \Reflectionclass(Json::class);
-        $errors = $jsonClass->getConstant('ERRORS');
-
         // Basic syntax error
         try {
             $json = "{'a': '1'}";
             Json::decode($json);
         } catch (\JsonException $e) {
-            $this->assertSame($errors['JSON_ERROR_SYNTAX'], $e->getMessage());
+            $this->assertSame('Syntax error', $e->getMessage());
         }
 
         // Unsupported type since PHP 5.5
@@ -185,7 +182,7 @@ class JsonTest extends TestCase
             Json::encode($data);
             fclose($fp);
         } catch (\JsonException $e) {
-            $this->assertSame($errors['JSON_ERROR_UNSUPPORTED_TYPE'], $e->getMessage());
+            $this->assertSame('Type is not supported', $e->getMessage());
         }
     }
 
