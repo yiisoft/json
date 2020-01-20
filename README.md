@@ -8,7 +8,7 @@
 
 The package provides methods to encode and decode JSON.
 
-- It throws `\JsonException` even if PHP version is lower than 7.3.
+- It throws `\JsonException` even if PHP version is lower than 7.4.
 - It has sensible defaults so you don't have to specify flags all the time.
 - It has handy methods to encode for HTML safely.
 - It handles `\JsonSerializable` and `\SimpleXMLElement` well. 
