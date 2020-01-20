@@ -69,7 +69,7 @@ final class Json
             return false;
         }
 
-        return PHP_VERSION_ID < 70300;
+        return PHP_VERSION_ID < 70400;
     }
 
     private static function hasFlag(int $flags, int $flag): bool
