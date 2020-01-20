@@ -9,19 +9,6 @@ namespace Yiisoft\Json;
  */
 final class Json
 {
-    private const ERRORS = [
-        'JSON_ERROR_DEPTH' => 'Maximum stack depth exceeded',
-        'JSON_ERROR_STATE_MISMATCH' => 'State mismatch (invalid or malformed JSON)',
-        'JSON_ERROR_CTRL_CHAR' => 'Control character error, possibly incorrectly encoded',
-        'JSON_ERROR_SYNTAX' => 'Syntax error',
-        'JSON_ERROR_UTF8' => 'Malformed UTF-8 characters, possibly incorrectly encoded',
-        'JSON_ERROR_RECURSION' => 'Recursion detected',
-        'JSON_ERROR_INF_OR_NAN' => 'Inf and NaN cannot be JSON encoded',
-        'JSON_ERROR_UNSUPPORTED_TYPE' => 'Type is not supported',
-        'JSON_ERROR_INVALID_PROPERTY_NAME' => 'The decoded property name is invalid',
-        'JSON_ERROR_UTF16' => 'Single unpaired UTF-16 surrogate in unicode escape',
-    ];
-
     /**
      * Encodes the given value into a JSON string.
      *
@@ -40,41 +27,8 @@ final class Json
         int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
         int $depth = 512
     ): string {
-        $shouldRethrowErrors = self::shouldRethrowErrors($options);
-
         $value = self::processData($value);
-
-        if ($shouldRethrowErrors) {
-            set_error_handler(
-                static function () {
-                    self::rethrowJsonError(JSON_ERROR_SYNTAX);
-                },
-                E_WARNING
-            );
-        }
-
-        $json = json_encode($value, $options, $depth);
-
-        if ($shouldRethrowErrors) {
-            restore_error_handler();
-            self::rethrowJsonError(json_last_error());
-        }
-
-        return $json;
-    }
-
-    private static function shouldRethrowErrors(int $options): bool
-    {
-        if (!self::hasFlag($options, JSON_THROW_ON_ERROR)) {
-            return false;
-        }
-
-        return PHP_VERSION_ID < 70300;
-    }
-
-    private static function hasFlag(int $flags, int $flag): bool
-    {
-        return ($flags & $flag) === $flag;
+        return json_encode($value, JSON_THROW_ON_ERROR | $options, $depth);
     }
 
     /**
@@ -113,35 +67,7 @@ final class Json
         if ($json === '') {
             return null;
         }
-        $decode = json_decode($json, $asArray, $depth, $options);
-
-        if (self::shouldRethrowErrors($options)) {
-            self::rethrowJsonError(json_last_error());
-        }
-        return $decode;
-    }
-
-    /**
-     * Handles [[encode()]] and [[decode()]] errors by throwing exceptions with the respective error message.
-     *
-     * @param int $lastError error code from [json_last_error()](http://php.net/manual/en/function.json-last-error.php).
-     * @throws \JsonException if there is any encoding/decoding error.
-     */
-    private static function rethrowJsonError(int $lastError): void
-    {
-        if ($lastError === JSON_ERROR_NONE) {
-            return;
-        }
-        $availableErrors = [];
-        foreach (self::ERRORS as $constant => $message) {
-            if (defined($constant)) {
-                $availableErrors[constant($constant)] = $message;
-            }
-        }
-        if (isset($availableErrors[$lastError])) {
-            throw new \JsonException($availableErrors[$lastError], $lastError);
-        }
-        throw new \JsonException('Unknown JSON encoding/decoding error.');
+        return json_decode($json, $asArray, $depth, JSON_THROW_ON_ERROR | $options);
     }
 
     /**
