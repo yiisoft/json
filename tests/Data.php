@@ -1,4 +1,5 @@
 <?php
+
 namespace Yiisoft\Json\Tests;
 
 class Data implements \JsonSerializable
