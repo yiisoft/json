@@ -16,10 +16,11 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": "^7.4"
+        "php": "^7.4|^8.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.3",
+        "phan/phan": "^3.0"
     },
     "autoload": {
         "psr-4": {
@@ -38,5 +39,6 @@
     },
     "config": {
         "sort-packages": true
-    }
+    },
+    "prefer-stable": true
 }
