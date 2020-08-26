@@ -1,11 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace Yiisoft\Json\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Json\Json;
 
-class JsonTest extends TestCase
+final class JsonTest extends TestCase
 {
     public function testEncodeBasic(): void
     {
@@ -176,21 +177,22 @@ class JsonTest extends TestCase
             $this->assertSame('Syntax error', $e->getMessage());
         }
 
-        // Unsupported type since PHP 5.5
+        $fp = fopen('php://stdin', 'rb');
+        $data = ['a' => $fp];
+
         try {
-            $fp = fopen('php://stdin', 'r');
-            $data = ['a' => $fp];
             Json::encode($data);
-            fclose($fp);
         } catch (\JsonException $e) {
             $this->assertSame('Type is not supported', $e->getMessage());
+        } finally {
+            fclose($fp);
         }
     }
 
     /**
      * @link https://github.com/yiisoft/yii2/issues/17760
      */
-    public function testEncodeDateTime()
+    public function testEncodeDateTime(): void
     {
         $input = new \DateTime('October 12, 2014', new \DateTimeZone('UTC'));
         $output = Json::encode($input);

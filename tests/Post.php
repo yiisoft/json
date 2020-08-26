@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Yiisoft\Json\Tests;
 
-class Post implements \JsonSerializable
+final class Post implements \JsonSerializable
 {
     private $id;
     private $title;
