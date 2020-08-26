@@ -14,7 +14,6 @@
         "irc": "irc://irc.freenode.net/yii",
         "source": "https://github.com/yiisoft/json"
     },
-    "minimum-stability": "dev",
     "require": {
         "php": "^7.4|^8.0"
     },
@@ -31,11 +30,6 @@
     "autoload-dev": {
         "psr-4": {
             "Yiisoft\\Json\\Tests\\": "tests"
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "3.0.x-dev"
         }
     },
     "config": {
