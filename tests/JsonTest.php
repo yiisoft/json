@@ -1,24 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Json\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Json\Json;
 
-class JsonTest extends TestCase
+final class JsonTest extends TestCase
 {
     public function testEncodeBasic(): void
     {
-        $data = '1';
-        $this->assertSame('"1"', Json::encode($data));
+        $this->assertSame('"1"', Json::encode('1'));
+    }
+
+    public function testEncodeDoesNotEscapeSlashesAndUnicode(): void
+    {
+        $this->assertSame('"/🎁"', Json::encode('/🎁'));
     }
 
     public function testEncodeSimpleArray(): void
     {
-        $data = [1, 2];
-        $this->assertSame('[1,2]', Json::encode($data));
-        $data = ['a' => 1, 'b' => 2];
-        $this->assertSame('{"a":1,"b":2}', Json::encode($data));
+        $this->assertSame('[1,2]', Json::encode([1, 2]));
+        $this->assertSame('{"a":1,"b":2}', Json::encode(['a' => 1, 'b' => 2]));
     }
 
     public function testEncodeSimpleObject(): void
@@ -31,10 +35,8 @@ class JsonTest extends TestCase
 
     public function testEncodeEmpty(): void
     {
-        $data = [];
-        $this->assertSame('[]', Json::encode($data));
-        $data = new \stdClass();
-        $this->assertSame('{}', Json::encode($data));
+        $this->assertSame('[]', Json::encode([]));
+        $this->assertSame('{}', Json::encode(new \stdClass()));
     }
 
     /**
@@ -42,8 +44,7 @@ class JsonTest extends TestCase
      */
     public function testEncodeNullObject(): void
     {
-        $data = (object)null;
-        $this->assertSame('{}', Json::encode($data));
+        $this->assertSame('{}', Json::encode((object)null));
     }
 
 
@@ -58,8 +59,7 @@ class JsonTest extends TestCase
      */
     public function testEncodeWithSerializableReturningEmptyArray(): void
     {
-        $data = new Data([]);
-        $this->assertSame('[]', Json::encode($data));
+        $this->assertSame('[]', Json::encode(new Data([])));
     }
 
     /**
@@ -73,22 +73,18 @@ class JsonTest extends TestCase
 
     public function testsHtmlEncodeEscapesCharacters(): void
     {
-        $data = '&<>"\'/';
-        $this->assertSame('"\u0026\u003C\u003E\u0022\u0027\/"', Json::htmlEncode($data));
+        $this->assertSame('"\u0026\u003C\u003E\u0022\u0027\/"', Json::htmlEncode('&<>"\'/'));
     }
 
     public function testHtmlEncodeBasic(): void
     {
-        $data = '1';
-        $this->assertSame('"1"', Json::htmlEncode($data));
+        $this->assertSame('"1"', Json::htmlEncode('1'));
     }
 
     public function testHtmlEncodeSimpleArray(): void
     {
-        $data = [1, 2];
-        $this->assertSame('[1,2]', Json::htmlEncode($data));
-        $data = ['a' => 1, 'b' => 2];
-        $this->assertSame('{"a":1,"b":2}', Json::htmlEncode($data));
+        $this->assertSame('[1,2]', Json::htmlEncode([1, 2]));
+        $this->assertSame('{"a":1,"b":2}', Json::htmlEncode(['a' => 1, 'b' => 2]));
     }
 
     public function testHtmlEncodeSimpleObject(): void
@@ -104,8 +100,7 @@ class JsonTest extends TestCase
      */
     public function testHtmlEncodeNullObject(): void
     {
-        $data = (object) null;
-        $this->assertSame('{}', Json::htmlEncode($data));
+        $this->assertSame('{}', Json::htmlEncode((object) null));
     }
 
     public function testHtmlEncodeJsonSerializable(): void
@@ -131,6 +126,18 @@ class JsonTest extends TestCase
         $this->assertSame('{"apiKey":"ieu2iqw4o","methodProperties":{"FindByString":"Kiev"}}', Json::encode($document));
     }
 
+    public function testEncodeSimpleXmlElement(): void
+    {
+        $data = new \SimpleXMLElement('<value>42</value>');
+        $this->assertSame('["42"]', Json::encode($data));
+    }
+
+    public function testEncodeSimpleXmlElementWithinArray(): void
+    {
+        $data = [new \SimpleXMLElement('<value>42</value>')];
+        $this->assertSame('[["42"]]', Json::encode($data));
+    }
+
     public function testsHtmlEncodeSplStack(): void
     {
         $postsStack = new \SplStack();
@@ -142,58 +149,58 @@ class JsonTest extends TestCase
 
     public function testDecodeEmptyValue(): void
     {
-        $json = '';
-        $actual = Json::decode($json);
-        $this->assertNull($actual);
+        $this->assertNull(Json::decode(''));
     }
 
     public function testDecodeBasic(): void
     {
-        $json = '"1"';
-        $this->assertSame('1', Json::decode($json));
+        $this->assertSame('1', Json::decode('"1"'));
     }
 
     public function testsDecodeArray(): void
     {
-        $json = '{"a":1,"b":2}';
-        $this->assertSame(['a' => 1, 'b' => 2], Json::decode($json));
+        $this->assertSame(['a' => 1, 'b' => 2], Json::decode('{"a":1,"b":2}'));
     }
 
     public function testsDecodeInvalidJsonThrowsException(): void
     {
-        $json = '{"a":1,"b":2';
         $this->expectException(\JsonException::class);
-        Json::decode($json);
+        Json::decode('{"a":1,"b":2');
+    }
+
+    public function testsDecodeWithFlagsInvalidJsonThrowsException(): void
+    {
+        $this->expectException(\JsonException::class);
+        Json::decode('{"a":1,"b":2', true, 512, JSON_INVALID_UTF8_IGNORE);
     }
 
     public function testHandleJsonError(): void
     {
         // Basic syntax error
         try {
-            $json = "{'a': '1'}";
-            Json::decode($json);
+            Json::decode("{'a': '1'}");
         } catch (\JsonException $e) {
             $this->assertSame('Syntax error', $e->getMessage());
         }
 
-        // Unsupported type since PHP 5.5
+        $fp = fopen('php://stdin', 'rb');
+        $data = ['a' => $fp];
+
         try {
-            $fp = fopen('php://stdin', 'r');
-            $data = ['a' => $fp];
             Json::encode($data);
-            fclose($fp);
         } catch (\JsonException $e) {
             $this->assertSame('Type is not supported', $e->getMessage());
+        } finally {
+            fclose($fp);
         }
     }
 
     /**
      * @link https://github.com/yiisoft/yii2/issues/17760
      */
-    public function testEncodeDateTime()
+    public function testEncodeDateTime(): void
     {
         $input = new \DateTime('October 12, 2014', new \DateTimeZone('UTC'));
-        $output = Json::encode($input);
-        $this->assertEquals('{"date":"2014-10-12 00:00:00.000000","timezone_type":3,"timezone":"UTC"}', $output);
+        $this->assertEquals('{"date":"2014-10-12 00:00:00.000000","timezone_type":3,"timezone":"UTC"}', Json::encode($input));
     }
 }

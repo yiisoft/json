@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Json\Tests;
 
-class Data implements \JsonSerializable
+final class Data implements \JsonSerializable
 {
     private $data;
 
