@@ -8,6 +8,7 @@
 
 The package provides methods to encode and decode JSON.
 
+- It always throws `\JsonException` instead of returning false on error.
 - It has sensible defaults, so you don't have to specify flags all the time.
 - It has handy method to encode for HTML safely.
 - It handles `\JsonSerializable`, `\DateTimeInterface`, and `\SimpleXMLElement` well. 
