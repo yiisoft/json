@@ -30,9 +30,7 @@ final class Json
         int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
         int $depth = 512
     ): string {
-        /**
-         * @var mixed $value
-         */
+        /** @var mixed $value */
         $value = self::processData($value);
         return json_encode($value, JSON_THROW_ON_ERROR | $options, $depth);
     }
@@ -97,14 +95,11 @@ final class Json
             } else {
                 $result = [];
                 /**
-                 * @var object $data
                  * @var string $name
                  * @var mixed $value
                  */
                 foreach ($data as $name => $value) {
-                    /**
-                     * @var array
-                     */
+                    /** @var array */
                     $result[$name] = $value;
                 }
                 $data = $result;
@@ -114,14 +109,10 @@ final class Json
             }
         }
         if (\is_array($data)) {
-            /**
-             * @var mixed $value
-             */
+            /** @var mixed $value */
             foreach ($data as $key => $value) {
                 if (\is_array($value) || \is_object($value)) {
-                    /**
-                     * @var array
-                     */
+                    /** @var array */
                     $data[$key] = self::processData($value);
                 }
             }
