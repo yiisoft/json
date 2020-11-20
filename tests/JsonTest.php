@@ -47,7 +47,6 @@ final class JsonTest extends TestCase
         $this->assertSame('{}', Json::encode((object)null));
     }
 
-
     public function testEncodeJsonSerializable(): void
     {
         $data = new Post(42, 'json serializable');
