@@ -22,8 +22,10 @@ final class Json
      * {@see http://www.php.net/manual/en/function.json-encode.php}.
      * Default is `JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR`.
      * @param int $depth The maximum depth.
-     * @return string The encoding result.
+     *
      * @throws \JsonException if there is any encoding error.
+     *
+     * @return string The encoding result.
      */
     public static function encode(
         $value,
@@ -31,7 +33,7 @@ final class Json
         int $depth = 512
     ): string {
         $expressions = [];
-        $value = static::processData($value, $expressions, uniqid('', true));
+        $value = self::processData($value, $expressions, uniqid('', true));
         $json = json_encode($value, JSON_THROW_ON_ERROR | $options, $depth);
         return $expressions === [] ? $json : strtr($json, $expressions);
     }
@@ -43,8 +45,10 @@ final class Json
      * You must ensure strings passed to this method have proper encoding before passing them.
      *
      * @param mixed $value The data to be encoded.
-     * @return string The encoding result.
+     *
      * @throws \JsonException If there is any encoding error.
+     *
+     * @return string The encoding result.
      */
     public static function htmlEncode($value): string
     {
@@ -56,12 +60,15 @@ final class Json
 
     /**
      * Decodes the given JSON string into a PHP data structure.
+     *
      * @param string $json The JSON string to be decoded.
      * @param bool $asArray Whether to return objects in terms of associative arrays.
      * @param int $depth The recursion depth.
      * @param int $options The decode options.
-     * @return mixed The PHP data.
+     *
      * @throws \JsonException If there is any decoding error.
+     *
+     * @return mixed The PHP data.
      */
     public static function decode(
         string $json,
@@ -77,9 +84,11 @@ final class Json
 
     /**
      * Pre-processes the data before sending it to `json_encode()`.
+     *
      * @param mixed $data The data to be processed.
      * @param array $expressions collection of JavaScript expressions
      * @param string $expPrefix a prefix internally used to handle JS expressions
+     *
      * @return mixed The processed data.
      */
     private static function processData($data, &$expressions, $expPrefix)
@@ -88,16 +97,16 @@ final class Json
             if ($data instanceof JsExpression) {
                 $token = "!{[$expPrefix=" . count($expressions) . ']}!';
                 $expressions['"' . $token . '"'] = $data->expression;
-                
+
                 return $token;
             }
-            
+
             if ($data instanceof \JsonSerializable) {
                 return self::processData($data->jsonSerialize(), $expressions, $expPrefix);
             }
 
             if ($data instanceof \DateTimeInterface) {
-                return static::processData((array)$data, $expressions, $expPrefix);
+                return self::processData((array)$data, $expressions, $expPrefix);
             }
 
             if ($data instanceof \SimpleXMLElement) {
