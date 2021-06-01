@@ -32,9 +32,10 @@ final class Json
         int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
         int $depth = 512
     ): string {
-        /** @var mixed $value */
-        $value = self::processData($value);
-        return json_encode($value, JSON_THROW_ON_ERROR | $options, $depth);
+        $expressions = [];
+        $value = self::processData($value, $expressions, uniqid('', true));
+        $json = json_encode($value, JSON_THROW_ON_ERROR | $options, $depth);
+        return $expressions === [] ? $json : strtr($json, $expressions);
     }
 
     /**
@@ -85,30 +86,34 @@ final class Json
      * Pre-processes the data before sending it to `json_encode()`.
      *
      * @param mixed $data The data to be processed.
+     * @param array $expressions collection of JavaScript expressions
+     * @param string $expPrefix a prefix internally used to handle JS expressions
      *
      * @return mixed The processed data.
      */
-    private static function processData($data)
+    private static function processData($data, &$expressions, $expPrefix)
     {
         if (\is_object($data)) {
+            if ($data instanceof JsExpression) {
+                $token = "!{[$expPrefix=" . count($expressions) . ']}!';
+                $expressions['"' . $token . '"'] = $data->expression;
+
+                return $token;
+            }
+
             if ($data instanceof \JsonSerializable) {
-                return self::processData($data->jsonSerialize());
+                return self::processData($data->jsonSerialize(), $expressions, $expPrefix);
             }
 
             if ($data instanceof \DateTimeInterface) {
-                return self::processData((array)$data);
+                return self::processData((array)$data, $expressions, $expPrefix);
             }
 
             if ($data instanceof \SimpleXMLElement) {
                 $data = (array)$data;
             } else {
                 $result = [];
-                /**
-                 * @var string $name
-                 * @var mixed $value
-                 */
                 foreach ($data as $name => $value) {
-                    /** @var array */
                     $result[$name] = $value;
                 }
                 $data = $result;
@@ -118,11 +123,9 @@ final class Json
             }
         }
         if (\is_array($data)) {
-            /** @var mixed $value */
             foreach ($data as $key => $value) {
                 if (\is_array($value) || \is_object($value)) {
-                    /** @var array */
-                    $data[$key] = self::processData($value);
+                    $data[$key] = self::processData($value, $expressions, $expPrefix);
                 }
             }
         }
