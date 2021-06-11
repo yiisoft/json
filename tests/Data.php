@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Json\Tests;
 
-final class Data implements \JsonSerializable
+use JsonSerializable;
+
+final class Data implements JsonSerializable
 {
     private $data;
 
