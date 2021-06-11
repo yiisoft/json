@@ -17,7 +17,7 @@
 
     <testsuites>
         <testsuite name="Yii JSON tests">
-            <directory>./tests/</directory>
+            <directory>./tests</directory>
         </testsuite>
     </testsuites>
 

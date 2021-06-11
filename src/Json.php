@@ -4,6 +4,15 @@ declare(strict_types=1);
 
 namespace Yiisoft\Json;
 
+use DateTimeInterface;
+use JsonException;
+use JsonSerializable;
+use SimpleXMLElement;
+use stdClass;
+
+use function is_array;
+use function is_object;
+
 /**
  * Json is a helper class providing JSON data encoding and decoding.
  * It enhances the PHP built-in functions `json_encode()` and `json_decode()`
@@ -23,7 +32,7 @@ final class Json
      * Default is `JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR`.
      * @param int $depth The maximum depth.
      *
-     * @throws \JsonException if there is any encoding error.
+     * @throws JsonException if there is any encoding error.
      *
      * @return string The encoding result.
      */
@@ -45,7 +54,7 @@ final class Json
      *
      * @param mixed $value The data to be encoded.
      *
-     * @throws \JsonException If there is any encoding error.
+     * @throws JsonException If there is any encoding error.
      *
      * @return string The encoding result.
      */
@@ -65,7 +74,7 @@ final class Json
      * @param int $depth The recursion depth.
      * @param int $options The decode options.
      *
-     * @throws \JsonException If there is any decoding error.
+     * @throws JsonException If there is any decoding error.
      *
      * @return mixed The PHP data.
      */
@@ -90,16 +99,16 @@ final class Json
      */
     private static function processData($data)
     {
-        if (\is_object($data)) {
-            if ($data instanceof \JsonSerializable) {
+        if (is_object($data)) {
+            if ($data instanceof JsonSerializable) {
                 return self::processData($data->jsonSerialize());
             }
 
-            if ($data instanceof \DateTimeInterface) {
+            if ($data instanceof DateTimeInterface) {
                 return self::processData((array)$data);
             }
 
-            if ($data instanceof \SimpleXMLElement) {
+            if ($data instanceof SimpleXMLElement) {
                 $data = (array)$data;
             } else {
                 $result = [];
@@ -114,13 +123,13 @@ final class Json
                 $data = $result;
             }
             if ($data === []) {
-                return new \stdClass();
+                return new stdClass();
             }
         }
-        if (\is_array($data)) {
+        if (is_array($data)) {
             /** @var mixed $value */
             foreach ($data as $key => $value) {
-                if (\is_array($value) || \is_object($value)) {
+                if (is_array($value) || is_object($value)) {
                     /** @var array */
                     $data[$key] = self::processData($value);
                 }
