@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Json\Tests;
 
+use DateTime;
+use DateTimeZone;
+use JsonException;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
+use SplStack;
+use stdClass;
 use Yiisoft\Json\Json;
 
 final class JsonTest extends TestCase
@@ -27,7 +33,7 @@ final class JsonTest extends TestCase
 
     public function testEncodeSimpleObject(): void
     {
-        $data = new \stdClass();
+        $data = new stdClass();
         $data->a = 1;
         $data->b = 2;
         $this->assertSame('{"a":1,"b":2}', Json::encode($data));
@@ -36,7 +42,7 @@ final class JsonTest extends TestCase
     public function testEncodeEmpty(): void
     {
         $this->assertSame('[]', Json::encode([]));
-        $this->assertSame('{}', Json::encode(new \stdClass()));
+        $this->assertSame('{}', Json::encode(new stdClass()));
     }
 
     /**
@@ -88,7 +94,7 @@ final class JsonTest extends TestCase
 
     public function testHtmlEncodeSimpleObject(): void
     {
-        $data = new \stdClass();
+        $data = new stdClass();
         $data->a = 1;
         $data->b = 2;
         $this->assertSame('{"a":1,"b":2}', Json::htmlEncode($data));
@@ -127,19 +133,19 @@ final class JsonTest extends TestCase
 
     public function testEncodeSimpleXmlElement(): void
     {
-        $data = new \SimpleXMLElement('<value>42</value>');
+        $data = new SimpleXMLElement('<value>42</value>');
         $this->assertSame('["42"]', Json::encode($data));
     }
 
     public function testEncodeSimpleXmlElementWithinArray(): void
     {
-        $data = [new \SimpleXMLElement('<value>42</value>')];
+        $data = [new SimpleXMLElement('<value>42</value>')];
         $this->assertSame('[["42"]]', Json::encode($data));
     }
 
     public function testsHtmlEncodeSplStack(): void
     {
-        $postsStack = new \SplStack();
+        $postsStack = new SplStack();
         $postsStack->push(new Post(915, 'record1'));
         $postsStack->push(new Post(456, 'record2'));
 
@@ -163,13 +169,13 @@ final class JsonTest extends TestCase
 
     public function testsDecodeInvalidJsonThrowsException(): void
     {
-        $this->expectException(\JsonException::class);
+        $this->expectException(JsonException::class);
         Json::decode('{"a":1,"b":2');
     }
 
     public function testsDecodeWithFlagsInvalidJsonThrowsException(): void
     {
-        $this->expectException(\JsonException::class);
+        $this->expectException(JsonException::class);
         Json::decode('{"a":1,"b":2', true, 512, JSON_INVALID_UTF8_IGNORE);
     }
 
@@ -178,7 +184,7 @@ final class JsonTest extends TestCase
         // Basic syntax error
         try {
             Json::decode("{'a': '1'}");
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             $this->assertSame('Syntax error', $e->getMessage());
         }
 
@@ -187,7 +193,7 @@ final class JsonTest extends TestCase
 
         try {
             Json::encode($data);
-        } catch (\JsonException $e) {
+        } catch (JsonException $e) {
             $this->assertSame('Type is not supported', $e->getMessage());
         } finally {
             fclose($fp);
@@ -199,7 +205,7 @@ final class JsonTest extends TestCase
      */
     public function testEncodeDateTime(): void
     {
-        $input = new \DateTime('October 12, 2014', new \DateTimeZone('UTC'));
+        $input = new DateTime('October 12, 2014', new DateTimeZone('UTC'));
         $this->assertEquals('{"date":"2014-10-12 00:00:00.000000","timezone_type":3,"timezone":"UTC"}', Json::encode($input));
     }
 }
