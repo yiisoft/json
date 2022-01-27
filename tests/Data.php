@@ -15,6 +15,7 @@ final class Data implements JsonSerializable
         $this->data = $data;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->data;
