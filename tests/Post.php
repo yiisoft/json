@@ -17,6 +17,7 @@ final class Post implements JsonSerializable
         $this->title = $title;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
