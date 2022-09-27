@@ -8,13 +8,8 @@ use JsonSerializable;
 
 final class Post implements JsonSerializable
 {
-    private $id;
-    private $title;
-
-    public function __construct($id, $title)
+    public function __construct(private $id, private $title)
     {
-        $this->id = $id;
-        $this->title = $title;
     }
 
     #[\ReturnTypeWillChange]

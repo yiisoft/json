@@ -37,7 +37,7 @@ final class Json
      * @return string The encoding result.
      */
     public static function encode(
-        $value,
+        mixed $value,
         int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
         int $depth = 512
     ): string {
@@ -58,7 +58,7 @@ final class Json
      *
      * @return string The encoding result.
      */
-    public static function htmlEncode($value): string
+    public static function htmlEncode(mixed $value): string
     {
         return self::encode(
             $value,
@@ -97,7 +97,7 @@ final class Json
      *
      * @return mixed The processed data.
      */
-    private static function processData($data)
+    private static function processData(mixed $data)
     {
         if (is_object($data)) {
             if ($data instanceof JsonSerializable) {
