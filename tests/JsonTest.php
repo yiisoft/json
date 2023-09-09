@@ -82,6 +82,12 @@ final class JsonTest extends TestCase
         $this->assertSame('{}', Json::encode($data));
     }
 
+    public function testEncodeWithSerializableReturningScalar(): void
+    {
+        $data = new Data('string');
+        $this->assertSame('"string"', Json::encode($data));
+    }
+
     public function testsHtmlEncodeEscapesCharacters(): void
     {
         $this->assertSame('"\u0026\u003C\u003E\u0022\u0027\/"', Json::htmlEncode('&<>"\'/'));
