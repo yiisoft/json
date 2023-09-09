@@ -33,6 +33,7 @@ final class JsonTest extends TestCase
     {
         $this->assertSame('[1,2]', Json::encode([1, 2]));
         $this->assertSame('{"a":1,"b":2}', Json::encode(['a' => 1, 'b' => 2]));
+        $this->assertSame('{"a":[null],"b":{"c":"d"}}', Json::encode(['a' => [null], 'b' => ['c' => 'd']]));
     }
 
     public function testEncodeSimpleObject(): void
@@ -40,7 +41,8 @@ final class JsonTest extends TestCase
         $data = new stdClass();
         $data->a = 1;
         $data->b = 2;
-        $this->assertSame('{"a":1,"b":2}', Json::encode($data));
+        $data->c = ['d' => ['e' => 3]];
+        $this->assertSame('{"a":1,"b":2,"c":{"d":{"e":3}}}', Json::encode($data));
     }
 
     public function testEncodeEmpty(): void
