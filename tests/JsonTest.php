@@ -223,7 +223,7 @@ final class JsonTest extends TestCase
     {
         $input = new DateTimeExtended('2023-09-09 10:00:00');
 
-        $this->assertEquals(
+        $this->assertSame(
             '{"public":"public property","date":"2023-09-09 10:00:00.000000","timezone_type":3,"timezone":"UTC"}',
             Json::encode($input),
         );
