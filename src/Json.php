@@ -105,46 +105,71 @@ final class Json
      */
     private static function processData($data)
     {
-        if (is_object($data)) {
-            if ($data instanceof JsonSerializable) {
-                return self::processData($data->jsonSerialize());
-            }
-
-            if ($data instanceof DateTimeInterface) {
-                return $data;
-            }
-
-            if ($data instanceof SimpleXMLElement) {
-                return (array)$data ?: new stdClass();
-            }
-
-            $result = [];
-            /**
-             * @psalm-var string $name
-             * @psalm-var mixed $value
-             */
-            foreach ($data as $name => $value) {
-                /** @psalm-var mixed */
-                $result[$name] = $value;
-            }
-
-            if ($result === []) {
-                return new stdClass();
-            }
-
-            $data = $result;
+        if (is_array($data)) {
+            return self::processArray($data);
         }
 
-        if (is_array($data)) {
-            /** @psalm-var mixed $value */
-            foreach ($data as $key => $value) {
-                if (is_array($value) || is_object($value)) {
-                    /** @psalm-var mixed */
-                    $data[$key] = self::processData($value);
-                }
+        if (is_object($data)) {
+            return self::processObject($data);
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     * @return array
+     */
+    private static function processArray(array $data): array
+    {
+        /** @psalm-var mixed $value */
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $data[$key] = self::processArray($value);
+            } elseif (is_object($value)) {
+                /** @psalm-var mixed */
+                $data[$key] = self::processObject($value);
             }
         }
 
         return $data;
+    }
+
+    /**
+     * @param object $data
+     * @return mixed
+     */
+    private static function processObject(object $data)
+    {
+        if ($data instanceof JsonSerializable) {
+            return self::processData($data->jsonSerialize());
+        }
+
+        if ($data instanceof DateTimeInterface) {
+            return $data;
+        }
+
+        if ($data instanceof SimpleXMLElement) {
+            return (array)$data ?: new stdClass();
+        }
+
+        $result = [];
+        /**
+         * @psalm-var string $name
+         * @psalm-var mixed $value
+         */
+        foreach ($data as $name => $value) {
+            if (is_array($value)) {
+                $result[$name] = self::processArray($value);
+            } elseif (is_object($value)) {
+                /** @psalm-var mixed */
+                $result[$name] = self::processObject($value);
+            } else {
+                /** @psalm-var mixed */
+                $result[$name] = $value;
+            }
+        }
+
+        return $result ?: new stdClass();
     }
 }
