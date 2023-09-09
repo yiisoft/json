@@ -10,6 +10,8 @@ use JsonSerializable;
 use SimpleXMLElement;
 use stdClass;
 
+use function json_decode;
+use function json_encode;
 use function is_array;
 use function is_object;
 
@@ -32,6 +34,8 @@ final class Json
      * Default is `JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR`.
      * @param int $depth The maximum depth.
      *
+     * @psalm-param int<1, 2147483647> $depth
+     *
      * @throws JsonException if there is any encoding error.
      *
      * @return string The encoding result.
@@ -41,7 +45,7 @@ final class Json
         int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
         int $depth = 512
     ): string {
-        /** @var mixed $value */
+        /** @psalm-var mixed $value */
         $value = self::processData($value);
         return json_encode($value, JSON_THROW_ON_ERROR | $options, $depth);
     }
@@ -74,6 +78,8 @@ final class Json
      * @param int $depth The recursion depth.
      * @param int $options The decode options.
      *
+     * @psalm-param int<1, 2147483647> $depth
+     *
      * @throws JsonException If there is any decoding error.
      *
      * @return mixed The PHP data.
@@ -105,36 +111,40 @@ final class Json
             }
 
             if ($data instanceof DateTimeInterface) {
-                return self::processData((array)$data);
+                return $data;
             }
 
             if ($data instanceof SimpleXMLElement) {
-                $data = (array)$data;
-            } else {
-                $result = [];
-                /**
-                 * @var string $name
-                 * @var mixed $value
-                 */
-                foreach ($data as $name => $value) {
-                    /** @var array */
-                    $result[$name] = $value;
-                }
-                $data = $result;
+                return (array)$data ?: new stdClass();
             }
-            if ($data === []) {
+
+            $result = [];
+            /**
+             * @psalm-var string $name
+             * @psalm-var mixed $value
+             */
+            foreach ($data as $name => $value) {
+                /** @psalm-var mixed */
+                $result[$name] = $value;
+            }
+
+            if ($result === []) {
                 return new stdClass();
             }
+
+            $data = $result;
         }
+
         if (is_array($data)) {
-            /** @var mixed $value */
+            /** @psalm-var mixed $value */
             foreach ($data as $key => $value) {
                 if (is_array($value) || is_object($value)) {
-                    /** @var array */
+                    /** @psalm-var mixed */
                     $data[$key] = self::processData($value);
                 }
             }
         }
+
         return $data;
     }
 }

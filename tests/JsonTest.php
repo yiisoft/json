@@ -13,6 +13,10 @@ use SplStack;
 use stdClass;
 use Yiisoft\Json\Json;
 
+use function fclose;
+use function fopen;
+use function json_encode;
+
 final class JsonTest extends TestCase
 {
     public function testEncodeBasic(): void
@@ -143,6 +147,12 @@ final class JsonTest extends TestCase
         $this->assertSame('[["42"]]', Json::encode($data));
     }
 
+    public function testEncodeEmptySimpleXmlElement(): void
+    {
+        $data = new SimpleXMLElement('<value/>');
+        $this->assertSame('{}', Json::encode($data));
+    }
+
     public function testsHtmlEncodeSplStack(): void
     {
         $postsStack = new SplStack();
@@ -207,5 +217,16 @@ final class JsonTest extends TestCase
     {
         $input = new DateTime('October 12, 2014', new DateTimeZone('UTC'));
         $this->assertEquals('{"date":"2014-10-12 00:00:00.000000","timezone_type":3,"timezone":"UTC"}', Json::encode($input));
+    }
+
+    public function testEncodeDateTimeExtended()
+    {
+        $input = new DateTimeExtended('2023-09-09 10:00:00');
+
+        $this->assertEquals(
+            '{"public":"public property","date":"2023-09-09 10:00:00.000000","timezone_type":3,"timezone":"UTC"}',
+            Json::encode($input),
+        );
+        $this->assertSame(json_encode($input), Json::encode($input));
     }
 }
