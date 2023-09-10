@@ -237,4 +237,9 @@ final class JsonTest extends TestCase
         );
         $this->assertSame(json_encode($input), Json::encode($input));
     }
+
+    public function testEncodeObjectProperties()
+    {
+        $this->assertSame('{"public":"public"}', Json::encode(new Properties()));
+    }
 }

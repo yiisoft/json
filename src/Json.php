@@ -11,6 +11,7 @@ use SimpleXMLElement;
 use stdClass;
 use Traversable;
 
+use function get_object_vars;
 use function json_decode;
 use function json_encode;
 use function is_array;
@@ -161,6 +162,6 @@ final class Json
             return self::processArray(iterator_to_array($data)) ?: new stdClass();
         }
 
-        return self::processArray((array)$data) ?: new stdClass();
+        return self::processArray(get_object_vars($data)) ?: new stdClass();
     }
 }
