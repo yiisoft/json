@@ -241,7 +241,9 @@ final class JsonTest extends TestCase
 
     public function testEncodeObjectProperties()
     {
-        $this->assertSame('{"public":"public"}', Json::encode(new Properties()));
+        $object = new Properties();
+        $this->assertSame('{"public":"public"}', Json::encode($object));
+        $this->assertSame(json_encode($object), Json::encode($object));
     }
 
     public function testEncodeJsonSerializableWithPreprocessing()
