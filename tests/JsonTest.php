@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Json\Tests;
 
+use ArrayObject;
 use DateTime;
 use DateTimeZone;
 use JsonException;
@@ -240,8 +241,12 @@ final class JsonTest extends TestCase
 
     public function testEncodeObjectProperties()
     {
-        $object = new Properties();
-        $this->assertSame('{"public":"public"}', Json::encode($object));
-        $this->assertSame(json_encode($object), Json::encode($object));
+        $this->assertSame('{"public":"public"}', Json::encode(new Properties()));
+    }
+
+    public function testEncodeJsonSerializableWithPreprocessing()
+    {
+        /** See section `About jsonSerialize()` by @link https://github.com/yiisoft/json/pull/41 */
+        $this->assertSame('[1,2,3]', Json::encode(new Data(new ArrayObject([1, 2, 3]))));
     }
 }
