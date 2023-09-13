@@ -21,7 +21,7 @@
         "ext-simplexml": "*"
     },
     "require-dev": {
-        "maglnet/composer-require-checker": "^4.2",
+        "maglnet/composer-require-checker": "^3.8|^4.2",
         "phpunit/phpunit": "^9.5",
         "rector/rector": "^0.18.3",
         "roave/infection-static-analysis-plugin": "^1.18",
