@@ -9,9 +9,14 @@ use JsonException;
 use JsonSerializable;
 use SimpleXMLElement;
 use stdClass;
+use Traversable;
 
+use function get_object_vars;
+use function json_decode;
+use function json_encode;
 use function is_array;
 use function is_object;
+use function iterator_to_array;
 
 /**
  * Json is a helper class providing JSON data encoding and decoding.
@@ -32,6 +37,8 @@ final class Json
      * Default is `JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR`.
      * @param int $depth The maximum depth.
      *
+     * @psalm-param int<1, 2147483647> $depth
+     *
      * @throws JsonException if there is any encoding error.
      *
      * @return string The encoding result.
@@ -41,8 +48,13 @@ final class Json
         int $options = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR,
         int $depth = 512
     ): string {
-        /** @var mixed $value */
-        $value = self::processData($value);
+        if (is_array($value)) {
+            $value = self::processArray($value);
+        } elseif (is_object($value)) {
+            /** @psalm-var mixed $value */
+            $value = self::processObject($value);
+        }
+
         return json_encode($value, JSON_THROW_ON_ERROR | $options, $depth);
     }
 
@@ -74,6 +86,8 @@ final class Json
      * @param int $depth The recursion depth.
      * @param int $options The decode options.
      *
+     * @psalm-param int<1, 2147483647> $depth
+     *
      * @throws JsonException If there is any decoding error.
      *
      * @return mixed The PHP data.
@@ -91,50 +105,63 @@ final class Json
     }
 
     /**
-     * Pre-processes the data before sending it to `json_encode()`.
+     * Pre-processes the array before sending it to `json_encode()`.
      *
-     * @param mixed $data The data to be processed.
+     * @param array $data The array to be processed.
+     *
+     * @return array The processed array.
+     */
+    private static function processArray(array $data): array
+    {
+        /** @psalm-var mixed $value */
+        foreach ($data as $key => $value) {
+            if (is_array($value)) {
+                $data[$key] = self::processArray($value);
+            } elseif (is_object($value)) {
+                /** @psalm-var mixed */
+                $data[$key] = self::processObject($value);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Pre-processes the object before sending it to `json_encode()`.
+     *
+     * @param object $data The object to be processed.
      *
      * @return mixed The processed data.
      */
-    private static function processData($data)
+    private static function processObject(object $data)
     {
-        if (is_object($data)) {
-            if ($data instanceof JsonSerializable) {
-                return self::processData($data->jsonSerialize());
+        if ($data instanceof JsonSerializable) {
+            /** @psalm-var mixed $data */
+            $data = $data->jsonSerialize();
+
+            if (is_array($data)) {
+                return self::processArray($data);
             }
 
-            if ($data instanceof DateTimeInterface) {
-                return self::processData((array)$data);
+            if (is_object($data)) {
+                return self::processObject($data);
             }
 
-            if ($data instanceof SimpleXMLElement) {
-                $data = (array)$data;
-            } else {
-                $result = [];
-                /**
-                 * @var string $name
-                 * @var mixed $value
-                 */
-                foreach ($data as $name => $value) {
-                    /** @var array */
-                    $result[$name] = $value;
-                }
-                $data = $result;
-            }
-            if ($data === []) {
-                return new stdClass();
-            }
+            return $data;
         }
-        if (is_array($data)) {
-            /** @var mixed $value */
-            foreach ($data as $key => $value) {
-                if (is_array($value) || is_object($value)) {
-                    /** @var array */
-                    $data[$key] = self::processData($value);
-                }
-            }
+
+        if ($data instanceof DateTimeInterface) {
+            return $data;
         }
-        return $data;
+
+        if ($data instanceof SimpleXMLElement) {
+            return (array)$data ?: new stdClass();
+        }
+
+        if ($data instanceof Traversable) {
+            return self::processArray(iterator_to_array($data)) ?: new stdClass();
+        }
+
+        return self::processArray(get_object_vars($data)) ?: new stdClass();
     }
 }
