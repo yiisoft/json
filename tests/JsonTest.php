@@ -13,6 +13,10 @@ use SplStack;
 use stdClass;
 use Yiisoft\Json\Json;
 
+use function fclose;
+use function fopen;
+use function json_encode;
+
 final class JsonTest extends TestCase
 {
     public function testEncodeBasic(): void
@@ -29,6 +33,7 @@ final class JsonTest extends TestCase
     {
         $this->assertSame('[1,2]', Json::encode([1, 2]));
         $this->assertSame('{"a":1,"b":2}', Json::encode(['a' => 1, 'b' => 2]));
+        $this->assertSame('{"a":[null],"b":{"c":"d"}}', Json::encode(['a' => [null], 'b' => ['c' => 'd']]));
     }
 
     public function testEncodeSimpleObject(): void
@@ -36,7 +41,8 @@ final class JsonTest extends TestCase
         $data = new stdClass();
         $data->a = 1;
         $data->b = 2;
-        $this->assertSame('{"a":1,"b":2}', Json::encode($data));
+        $data->c = ['d' => ['e' => 3]];
+        $this->assertSame('{"a":1,"b":2,"c":{"d":{"e":3}}}', Json::encode($data));
     }
 
     public function testEncodeEmpty(): void
@@ -74,6 +80,12 @@ final class JsonTest extends TestCase
     {
         $data = new Data((object)null);
         $this->assertSame('{}', Json::encode($data));
+    }
+
+    public function testEncodeWithSerializableReturningScalar(): void
+    {
+        $data = new Data('string');
+        $this->assertSame('"string"', Json::encode($data));
     }
 
     public function testsHtmlEncodeEscapesCharacters(): void
@@ -143,6 +155,12 @@ final class JsonTest extends TestCase
         $this->assertSame('[["42"]]', Json::encode($data));
     }
 
+    public function testEncodeEmptySimpleXmlElement(): void
+    {
+        $data = new SimpleXMLElement('<value/>');
+        $this->assertSame('{}', Json::encode($data));
+    }
+
     public function testsHtmlEncodeSplStack(): void
     {
         $postsStack = new SplStack();
@@ -207,5 +225,23 @@ final class JsonTest extends TestCase
     {
         $input = new DateTime('October 12, 2014', new DateTimeZone('UTC'));
         $this->assertEquals('{"date":"2014-10-12 00:00:00.000000","timezone_type":3,"timezone":"UTC"}', Json::encode($input));
+    }
+
+    public function testEncodeDateTimeExtended()
+    {
+        $input = new DateTimeExtended('2023-09-09 10:00:00');
+
+        $this->assertSame(
+            '{"public":"public property","date":"2023-09-09 10:00:00.000000","timezone_type":3,"timezone":"UTC"}',
+            Json::encode($input),
+        );
+        $this->assertSame(json_encode($input), Json::encode($input));
+    }
+
+    public function testEncodeObjectProperties()
+    {
+        $object = new Properties();
+        $this->assertSame('{"public":"public"}', Json::encode($object));
+        $this->assertSame(json_encode($object), Json::encode($object));
     }
 }
