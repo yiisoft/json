@@ -133,7 +133,7 @@ final class Json
      *
      * @return mixed The processed data.
      */
-    private static function processData($data)
+    private static function processObject(object $data)
     {
         if ($data instanceof JsonSerializable) {
             /** @psalm-var mixed $data */
