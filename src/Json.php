@@ -33,7 +33,7 @@ final class Json
      *
      * @param mixed $value The data to be encoded.
      * @param int $options The encoding options. For more details please refer to
-     * {@see http://www.php.net/manual/en/function.json-encode.php}.
+     * {@see https://www.php.net/manual/en/function.json-encode.php}.
      * Default is `JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR`.
      * @param int $depth The maximum depth.
      *
