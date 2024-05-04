@@ -33,7 +33,7 @@ The package provides methods to encode and decode JSON.
 The package could be installed via [composer](https://getcomposer.org/download/)
 
 ```shell
-composer require yiisoft/json --prefer-dist
+composer require yiisoft/json
 ```
 
 ## General usage
