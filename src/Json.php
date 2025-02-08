@@ -51,10 +51,12 @@ final class Json
         if (is_array($value)) {
             $value = self::processArray($value);
         } elseif (is_object($value)) {
-            /** @psalm-var mixed $value */
             $value = self::processObject($value);
         }
 
+        /**
+         * @var string We use flag `JSON_THROW_ON_ERROR`, so `json_encode` never returns `false`.
+         */
         return json_encode($value, JSON_THROW_ON_ERROR | $options, $depth);
     }
 
@@ -113,12 +115,10 @@ final class Json
      */
     private static function processArray(array $data): array
     {
-        /** @psalm-var mixed $value */
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $data[$key] = self::processArray($value);
             } elseif (is_object($value)) {
-                /** @psalm-var mixed */
                 $data[$key] = self::processObject($value);
             }
         }
@@ -136,7 +136,6 @@ final class Json
     private static function processObject(object $data)
     {
         if ($data instanceof JsonSerializable) {
-            /** @psalm-var mixed $data */
             $data = $data->jsonSerialize();
 
             if (is_array($data)) {
