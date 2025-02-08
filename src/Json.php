@@ -22,8 +22,6 @@ use function iterator_to_array;
  * Json is a helper class providing JSON data encoding and decoding.
  * It enhances the PHP built-in functions `json_encode()` and `json_decode()`
  * by throwing exceptions when decoding fails.
- *
- * @psalm-api
  */
 final class Json
 {
