@@ -6,13 +6,13 @@
     <br>
 </p>
 
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/json/v/stable.png)](https://packagist.org/packages/yiisoft/json)
-[![Total Downloads](https://poser.pugx.org/yiisoft/json/downloads.png)](https://packagist.org/packages/yiisoft/json)
-[![Build Status](https://github.com/yiisoft/json/workflows/build/badge.svg)](https://github.com/yiisoft/json/actions)
+[![Latest Stable Version](https://poser.pugx.org/yiisoft/json/v)](https://packagist.org/packages/yiisoft/json)
+[![Total Downloads](https://poser.pugx.org/yiisoft/json/downloads)](https://packagist.org/packages/yiisoft/json)
+[![Build status](https://github.com/yiisoft/json/actions/workflows/build.yml/badge.svg)](https://github.com/yiisoft/json/actions/workflows/build.yml)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/yiisoft/json/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/json/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/yiisoft/json/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/yiisoft/json/?branch=master)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fjson%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/json/master)
-[![static analysis](https://github.com/yiisoft/json/workflows/static%20analysis/badge.svg)](https://github.com/yiisoft/json/actions?query=workflow%3A%22static+analysis%22)
+[![Static analysis](https://github.com/yiisoft/json/actions/workflows/static.yml/badge.svg?branch=master)](https://github.com/yiisoft/json/actions/workflows/static.yml?query=branch%3Amaster)
 [![type-coverage](https://shepherd.dev/github/yiisoft/json/coverage.svg)](https://shepherd.dev/github/yiisoft/json)
 
 The package provides methods to encode and decode JSON.
