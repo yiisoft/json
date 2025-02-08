@@ -23,7 +23,7 @@ use function iterator_to_array;
  * It enhances the PHP built-in functions `json_encode()` and `json_decode()`
  * by throwing exceptions when decoding fails.
  *
- * @api
+ * @psalm-api
  */
 final class Json
 {
