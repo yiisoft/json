@@ -251,4 +251,67 @@ final class JsonTest extends TestCase
         /** See section `About jsonSerialize()` by @link https://github.com/yiisoft/json/pull/41 */
         $this->assertSame('[1,2,3]', Json::encode(new Data(new ArrayObject([1, 2, 3]))));
     }
+
+    public function testEncodeBackedEnum(): void
+    {
+        $enum = TestBackedEnum::TEST;
+        $this->assertSame('"test"', Json::encode($enum));
+        $this->assertSame(json_encode($enum), Json::encode($enum));
+    }
+
+    public function testEncodeBackedEnumInArray(): void
+    {
+        $enum = TestBackedEnum::ACTIVE;
+        $data = ['status' => $enum];
+        $this->assertSame('{"status":"active"}', Json::encode($data));
+        $this->assertSame(json_encode($data), Json::encode($data));
+    }
+
+    public function testEncodeBackedEnumInObject(): void
+    {
+        $enum = TestBackedEnum::INACTIVE;
+        $data = new stdClass();
+        $data->status = $enum;
+        $this->assertSame('{"status":"inactive"}', Json::encode($data));
+        $this->assertSame(json_encode($data), Json::encode($data));
+    }
+
+    public function testEncodePureEnumThrowsException(): void
+    {
+        $this->expectException(JsonException::class);
+        $this->expectExceptionMessage('Non-backed enums have no default serialization');
+        Json::encode(TestPureEnum::RED);
+    }
+
+    public function testEncodePureEnumInArrayThrowsException(): void
+    {
+        $this->expectException(JsonException::class);
+        $this->expectExceptionMessage('Non-backed enums have no default serialization');
+        Json::encode(['color' => TestPureEnum::BLUE]);
+    }
+
+    public function testEncodePureEnumMatchesNativeJsonEncode(): void
+    {
+        $enum = TestPureEnum::GREEN;
+        
+        // Both should throw the same exception
+        $nativeException = null;
+        $jsonException = null;
+        
+        try {
+            json_encode($enum, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $nativeException = $e;
+        }
+        
+        try {
+            Json::encode($enum);
+        } catch (JsonException $e) {
+            $jsonException = $e;
+        }
+        
+        $this->assertNotNull($nativeException, 'Native json_encode should throw exception');
+        $this->assertNotNull($jsonException, 'Json::encode should throw exception');
+        $this->assertSame($nativeException->getMessage(), $jsonException->getMessage());
+    }
 }

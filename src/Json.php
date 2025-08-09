@@ -149,6 +149,16 @@ final class Json
             return $data;
         }
 
+        if ($data instanceof \BackedEnum) {
+            return $data->value;
+        }
+
+        if ($data instanceof \UnitEnum) {
+            // Pure enums (non-backed) should be handled by native json_encode()
+            // which will throw JsonException with JSON_THROW_ON_ERROR
+            return $data;
+        }
+
         if ($data instanceof DateTimeInterface) {
             return $data;
         }
