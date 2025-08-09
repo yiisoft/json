@@ -293,23 +293,23 @@ final class JsonTest extends TestCase
     public function testEncodePureEnumMatchesNativeJsonEncode(): void
     {
         $enum = TestPureEnum::GREEN;
-        
+
         // Both should throw the same exception
         $nativeException = null;
         $jsonException = null;
-        
+
         try {
             json_encode($enum, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
             $nativeException = $e;
         }
-        
+
         try {
             Json::encode($enum);
         } catch (JsonException $e) {
             $jsonException = $e;
         }
-        
+
         $this->assertNotNull($nativeException, 'Native json_encode should throw exception');
         $this->assertNotNull($jsonException, 'Json::encode should throw exception');
         $this->assertSame($nativeException->getMessage(), $jsonException->getMessage());
