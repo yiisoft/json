@@ -150,6 +150,7 @@ final class Json
             return $data;
         }
 
+        /** @psalm-suppress UndefinedClass Required for PHP 8.0 and earlier */
         if ($data instanceof DateTimeInterface
             || $data instanceof UnitEnum
         ) {
