@@ -12,30 +12,30 @@ use Yiisoft\Json\Json;
 use function PHPUnit\Framework\assertSame;
 
 final class EnumsTest extends TestCase
- {
-     public static function dataBackedEnum(): iterable
-     {
-         yield 'string enum' => ['"test"', StringEnum::Test];
-         yield 'integer enum' => ['1', IntegerEnum::One];
-         yield 'array with backed enum' => [
-             '{"status":"active"}',
-             ['status' => StringEnum::Active],
-         ];
+{
+    public static function dataBackedEnum(): iterable
+    {
+        yield 'string enum' => ['"test"', StringEnum::Test];
+        yield 'integer enum' => ['1', IntegerEnum::One];
+        yield 'array with backed enum' => [
+            '{"status":"active"}',
+            ['status' => StringEnum::Active],
+        ];
 
-         $object = new stdClass();
-         $object->status = StringEnum::Inactive;
-         yield 'object with backed enum' => [
-             '{"status":"inactive"}',
-             $object,
-         ];
-     }
+        $object = new stdClass();
+        $object->status = StringEnum::Inactive;
+        yield 'object with backed enum' => [
+            '{"status":"inactive"}',
+            $object,
+        ];
+    }
 
     /**
      * @dataProvider dataBackedEnum
      */
     public function testBackedEnum(string $expected, mixed $value): void
     {
-        $result =  Json::encode($value);
+        $result = Json::encode($value);
 
         assertSame($expected, $result);
     }
