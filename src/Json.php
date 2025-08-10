@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Json;
 
-use BackedEnum;
 use DateTimeInterface;
 use JsonException;
 use JsonSerializable;
