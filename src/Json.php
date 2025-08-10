@@ -151,10 +151,6 @@ final class Json
             return $data;
         }
 
-        if ($data instanceof BackedEnum) {
-            return $data->value;
-        }
-
         if ($data instanceof DateTimeInterface
             || $data instanceof UnitEnum
         ) {
