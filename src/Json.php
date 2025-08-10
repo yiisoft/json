@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Json;
 
+use BackedEnum;
 use DateTimeInterface;
 use JsonException;
 use JsonSerializable;
 use SimpleXMLElement;
 use stdClass;
 use Traversable;
+use UnitEnum;
 
 use function get_object_vars;
 use function json_decode;
@@ -149,22 +151,18 @@ final class Json
             return $data;
         }
 
-        if ($data instanceof \BackedEnum) {
+        if ($data instanceof BackedEnum) {
             return $data->value;
         }
 
-        if ($data instanceof \UnitEnum) {
-            // Pure enums (non-backed) should be handled by native json_encode()
-            // which will throw JsonException with JSON_THROW_ON_ERROR
-            return $data;
-        }
-
-        if ($data instanceof DateTimeInterface) {
+        if ($data instanceof DateTimeInterface
+            || $data instanceof UnitEnum
+        ) {
             return $data;
         }
 
         if ($data instanceof SimpleXMLElement) {
-            return (array)$data ?: new stdClass();
+            return (array) $data ?: new stdClass();
         }
 
         if ($data instanceof Traversable) {

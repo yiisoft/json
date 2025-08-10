@@ -19,6 +19,9 @@
         <testsuite name="Yii JSON tests">
             <directory>./tests</directory>
         </testsuite>
+        <testsuite name="Yii JSON PHP version specific tests">
+            <directory phpVersion="8.1" phpVersionOperator=">=">./tests/TestEnvironments/Php81</directory>
+        </testsuite>
     </testsuites>
 
     <coverage>
