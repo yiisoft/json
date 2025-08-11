@@ -10,6 +10,7 @@ use JsonSerializable;
 use SimpleXMLElement;
 use stdClass;
 use Traversable;
+use UnitEnum;
 
 use function get_object_vars;
 use function json_decode;
@@ -149,12 +150,15 @@ final class Json
             return $data;
         }
 
-        if ($data instanceof DateTimeInterface) {
+        /** @psalm-suppress UndefinedClass Required for PHP 8.0 and earlier */
+        if ($data instanceof DateTimeInterface
+            || $data instanceof UnitEnum
+        ) {
             return $data;
         }
 
         if ($data instanceof SimpleXMLElement) {
-            return (array)$data ?: new stdClass();
+            return (array) $data ?: new stdClass();
         }
 
         if ($data instanceof Traversable) {
