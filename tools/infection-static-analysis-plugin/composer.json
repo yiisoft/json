@@ -1,5 +1,10 @@
 {
     "require-dev": {
         "roave/infection-static-analysis-plugin": "^1.18"
+    },
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true
+        }
     }
 }
