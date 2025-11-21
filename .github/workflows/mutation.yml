@@ -28,6 +28,6 @@ jobs:
         ['ubuntu-latest']
       php: >-
         ['8.4']
-      infectionArgs: "--ignore-msi-with-no-mutations"
+      infection-args: "--ignore-msi-with-no-mutations"
     secrets:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
