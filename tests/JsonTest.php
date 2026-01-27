@@ -18,6 +18,8 @@ use function fclose;
 use function fopen;
 use function json_encode;
 
+use const JSON_INVALID_UTF8_IGNORE;
+
 final class JsonTest extends TestCase
 {
     public function testEncodeBasic(): void
@@ -57,7 +59,7 @@ final class JsonTest extends TestCase
      */
     public function testEncodeNullObject(): void
     {
-        $this->assertSame('{}', Json::encode((object)null));
+        $this->assertSame('{}', Json::encode((object) null));
     }
 
     public function testEncodeJsonSerializable(): void
@@ -79,7 +81,7 @@ final class JsonTest extends TestCase
      */
     public function testEncodeWithSerializableReturningEmptyObject(): void
     {
-        $data = new Data((object)null);
+        $data = new Data((object) null);
         $this->assertSame('{}', Json::encode($data));
     }
 

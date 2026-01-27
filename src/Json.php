@@ -19,6 +19,14 @@ use function is_array;
 use function is_object;
 use function iterator_to_array;
 
+use const JSON_HEX_AMP;
+use const JSON_HEX_APOS;
+use const JSON_HEX_QUOT;
+use const JSON_HEX_TAG;
+use const JSON_THROW_ON_ERROR;
+use const JSON_UNESCAPED_SLASHES;
+use const JSON_UNESCAPED_UNICODE;
+
 /**
  * Json is a helper class providing JSON data encoding and decoding.
  * It enhances the PHP built-in functions `json_encode()` and `json_decode()`
@@ -77,7 +85,7 @@ final class Json
     {
         return self::encode(
             $value,
-            JSON_UNESCAPED_UNICODE | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_THROW_ON_ERROR
+            JSON_UNESCAPED_UNICODE | JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_THROW_ON_ERROR,
         );
     }
 
