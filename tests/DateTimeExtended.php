@@ -8,7 +8,6 @@ use DateTime;
 
 final class DateTimeExtended extends DateTime
 {
-    private string $private = 'private property';
-
     public string $public = 'public property';
+    private string $private = 'private property';
 }

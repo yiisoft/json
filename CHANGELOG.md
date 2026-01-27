@@ -2,7 +2,7 @@
 
 ## 1.1.1 under development
 
-- no changes in this release.
+- Enh #61: Explicitly import constants in "use" section (@mspirkov)
 
 ## 1.1.0 November 21, 2025
 

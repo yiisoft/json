@@ -6,9 +6,8 @@ namespace Yiisoft\Json\Tests;
 
 class Properties
 {
-    private string $private = 'private';
+    public string $public = 'public';
 
     protected string $protected = 'protected';
-
-    public string $public = 'public';
+    private string $private = 'private';
 }
