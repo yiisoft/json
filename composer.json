@@ -33,6 +33,7 @@
     "require-dev": {
         "bamarni/composer-bin-plugin": "^1.8.2",
         "friendsofphp/php-cs-fixer": "^3.93",
+        "phpstan/phpstan": "^2.3",
         "phpunit/phpunit": "^9.6.22",
         "rector/rector": "^2.5.5",
         "shipmonk/composer-dependency-analyser": "^1.8",
@@ -67,6 +68,7 @@
     "scripts": {
         "cs-fix": "php-cs-fixer fix",
         "dependency-analyser": "composer-dependency-analyser",
+        "phpstan": "phpstan",
         "rector": "rector",
         "test": "phpunit --testdox --no-interaction",
         "test-watch": "phpunit-watcher watch"
