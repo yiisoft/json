@@ -4,9 +4,8 @@ on:
   pull_request:
     paths: &paths
       - 'src/**'
-      - 'config/**'
       - '.github/workflows/static.yml'
-      - 'psalm*.xml'
+      - 'phpstan.neon'
       - 'composer.json'
   push:
     branches: ['master']
@@ -20,10 +19,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  psalm:
-    uses: yiisoft/actions/.github/workflows/psalm.yml@master
+  phpstan:
+    uses: yiisoft/actions/.github/workflows/phpstan.yml@master
     with:
       os: >-
         ['ubuntu-latest']
       php: >-
-        ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+        ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4', '8.5']

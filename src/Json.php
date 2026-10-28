@@ -44,9 +44,7 @@ final class Json
      * @param int $options The encoding options. For more details please refer to
      * {@see https://www.php.net/manual/en/function.json-encode.php}.
      * Default is `JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR`.
-     * @param int $depth The maximum depth.
-     *
-     * @psalm-param int<1, 2147483647> $depth
+     * @param int<1, 2147483647> $depth The maximum depth.
      *
      * @throws JsonException if there is any encoding error.
      *
@@ -64,7 +62,7 @@ final class Json
         }
 
         /**
-         * @var string We use flag `JSON_THROW_ON_ERROR`, so `json_encode` never returns `false`.
+         * @var non-empty-string We use flag `JSON_THROW_ON_ERROR`, so `json_encode` never returns `false`.
          */
         return json_encode($value, JSON_THROW_ON_ERROR | $options, $depth);
     }
@@ -94,10 +92,8 @@ final class Json
      *
      * @param string $json The JSON string to be decoded.
      * @param bool $asArray Whether to return objects in terms of associative arrays.
-     * @param int $depth The recursion depth.
+     * @param int<1, 2147483647> $depth The recursion depth.
      * @param int $options The decode options.
-     *
-     * @psalm-param int<1, 2147483647> $depth
      *
      * @throws JsonException If there is any decoding error.
      *
@@ -118,9 +114,9 @@ final class Json
     /**
      * Pre-processes the array before sending it to `json_encode()`.
      *
-     * @param array $data The array to be processed.
+     * @param array<mixed> $data The array to be processed.
      *
-     * @return array The processed array.
+     * @return array<mixed> The processed array.
      */
     private static function processArray(array $data): array
     {
@@ -158,7 +154,6 @@ final class Json
             return $data;
         }
 
-        /** @psalm-suppress UndefinedClass Required for PHP 8.0 and earlier */
         if ($data instanceof DateTimeInterface
             || $data instanceof UnitEnum
         ) {

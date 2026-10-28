@@ -12,7 +12,6 @@
 [![Code Coverage](https://codecov.io/gh/yiisoft/json/branch/master/graph/badge.svg)](https://codecov.io/gh/yiisoft/json)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fjson%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/json/master)
 [![Static analysis](https://github.com/yiisoft/json/actions/workflows/static.yml/badge.svg?branch=master)](https://github.com/yiisoft/json/actions/workflows/static.yml?query=branch%3Amaster)
-[![type-coverage](https://shepherd.dev/github/yiisoft/json/coverage.svg)](https://shepherd.dev/github/yiisoft/json)
 
 The package provides methods to encode and decode JSON.
 

@@ -3,6 +3,7 @@
 ## 1.1.1 under development
 
 - Enh #61: Explicitly import constants in "use" section (@mspirkov)
+- Chg #70: Replace Psalm with PHPStan (@vjik)
 
 ## 1.1.0 November 21, 2025
 

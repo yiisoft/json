@@ -1,0 +1,11 @@
+parameters:
+    level: max
+    paths:
+        - src
+    ignoreErrors:
+        # `UnitEnum` is not available in PHP 8.0 and earlier
+        -
+            identifier: class.notFound
+            message: '#^Class UnitEnum not found\.$#'
+            path: src/Json.php
+            reportUnmatched: false
