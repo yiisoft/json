@@ -22,7 +22,7 @@ The package provides methods to encode and decode JSON.
 
 ## Requirements
 
-- PHP 7.4 - 8.5.
+- PHP 7.4 - 8.6.
 - `JSON` PHP extension.
 - `SimpleXML` PHP extension.
 

@@ -206,7 +206,7 @@ final class JsonTest extends TestCase
         try {
             Json::decode("{'a': '1'}");
         } catch (JsonException $e) {
-            $this->assertSame('Syntax error', $e->getMessage());
+            $this->assertStringStartsWith('Syntax error', $e->getMessage());
         }
 
         $fp = fopen('php://stdin', 'rb');
