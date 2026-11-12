@@ -4,7 +4,7 @@
 
 - Enh #61: Explicitly import constants in "use" section (@mspirkov)
 - Chg #70: Replace Psalm with PHPStan (@vjik)
-- Chg #72: Add PHP 8.6 support (@vjik)
+- Enh #72: Add PHP 8.6 support (@vjik)
 
 ## 1.1.0 November 21, 2025
 
